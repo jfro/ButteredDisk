@@ -10,15 +10,18 @@
 //#import "FMNSFileManagerAdditions.h"
 
 @interface BDDisk () {
-	BCDiskDidUnmountBlock _unmountCompletionBlock;
-	BCDiskDidMountBlock _mountCompletionBlock;
+	BDDiskDidUnmountBlock _unmountCompletionBlock;
+	BDDiskDidMountBlock _mountCompletionBlock;
+	BDDiskDidEjectBlock _ejectCompletionBlock;
 }
 
 - (void)_mountDidFinishWithError:(NSError *)error;
 - (void)_unmountDidFinishWithError:(NSError *)error;
+- (void)_ejectDidFinishWithError:(NSError *)error;
 
 @end
 
+// DA callbacks 
 void bcDiskDidMount(DADiskRef disk, DADissenterRef dissenter, void *context)
 {
 	NSError *error = nil;
@@ -27,7 +30,7 @@ void bcDiskDidMount(DADiskRef disk, DADissenterRef dissenter, void *context)
 		int failureCode = DADissenterGetStatus(dissenter);
 		NSString *failureReason = CFBridgingRelease(DADissenterGetStatusString(dissenter));
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:failureReason forKey:NSLocalizedFailureReasonErrorKey];
-		error = [NSError errorWithDomain:@"BCDiskMmountErrorDomain" code:failureCode userInfo:errorInfo];
+		error = [NSError errorWithDomain:@"BDDiskMmountErrorDomain" code:failureCode userInfo:errorInfo];
 	}
 	
 	[(__bridge BDDisk *)context _mountDidFinishWithError:error];
@@ -41,11 +44,27 @@ void bcDiskDidUnmount(DADiskRef disk, DADissenterRef dissenter, void *context)
 		int failureCode = DADissenterGetStatus(dissenter);
 		NSString *failureReason = CFBridgingRelease(DADissenterGetStatusString(dissenter));
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:failureReason forKey:NSLocalizedFailureReasonErrorKey];
-		error = [NSError errorWithDomain:@"BCDiskUnmountErrorDomain" code:failureCode userInfo:errorInfo];
+		error = [NSError errorWithDomain:@"BDDiskUnmountErrorDomain" code:failureCode userInfo:errorInfo];
 	}
 	
 	[(__bridge BDDisk *)context _unmountDidFinishWithError:error];
 }
+
+void bcDiskDidEject(DADiskRef disk, DADissenterRef dissenter, void *context)
+{
+	NSError *error = nil;
+	if(dissenter != NULL)
+	{
+		int failureCode = DADissenterGetStatus(dissenter);
+		NSString *failureReason = CFBridgingRelease(DADissenterGetStatusString(dissenter));
+		NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:failureReason forKey:NSLocalizedFailureReasonErrorKey];
+		error = [NSError errorWithDomain:@"BDDiskEjectErrorDomain" code:failureCode userInfo:errorInfo];
+	}
+	
+	[(__bridge BDDisk *)context _ejectDidFinishWithError:error];
+}
+
+#pragma mark -
 
 @implementation BDDisk
 
@@ -228,7 +247,7 @@ void bcDiskDidUnmount(DADiskRef disk, DADissenterRef dissenter, void *context)
 	}
 }
 
-- (void)mountWithCompletionHandler:(BCDiskDidMountBlock)handler
+- (void)mountWithCompletionHandler:(BDDiskDidMountBlock)handler
 {
 	if(_mountCompletionBlock)
 	{
@@ -246,13 +265,39 @@ void bcDiskDidUnmount(DADiskRef disk, DADissenterRef dissenter, void *context)
 	}
 }
 
-- (void)unmountWithCompletionHandler:(BCDiskDidUnmountBlock)handler
+- (void)unmountWithCompletionHandler:(BDDiskDidUnmountBlock)handler
+{
+	[self unmountWithCompletionHandler:handler force:NO];
+}
+
+- (void)unmountWithCompletionHandler:(BDDiskDidUnmountBlock)handler force:(BOOL)force
 {
 	if(!_unmountCompletionBlock)
 	{
+		DADiskUnmountOptions options = (self.isWholeDisk ? kDADiskUnmountOptionWhole : kDADiskUnmountOptionDefault) | (force ? kDADiskUnmountOptionForce : 0);
 		_unmountCompletionBlock = handler;
-		DADiskUnmount(diskRef, self.isWholeDisk ? kDADiskUnmountOptionWhole : kDADiskUnmountOptionDefault, bcDiskDidUnmount, (__bridge void *)self);
+		DADiskUnmount(diskRef, options, bcDiskDidUnmount, (__bridge void *)self);
 	}
+}
+
+- (void)_ejectDidFinishWithError:(NSError *)error
+{
+	if(_ejectCompletionBlock)
+	{
+		_ejectCompletionBlock(error);
+		_ejectCompletionBlock = nil;
+	}
+}
+
+- (BOOL)ejectWithCompletionHandler:(BDDiskDidEjectBlock)handler
+{
+	BOOL result = NO;
+	if(self.isRemovable)
+	{
+		DADiskEject(diskRef, kDADiskEjectOptionDefault, bcDiskDidEject, (__bridge void *)self);
+		result = YES;
+	}
+	return result;
 }
 
 @end

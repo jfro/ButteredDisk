@@ -13,5 +13,4 @@ Todo
 =======
 
 * Modernize session class
-* Implement eject on BDDisk
 * Implement icon lookup on BDDisk

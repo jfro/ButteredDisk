@@ -9,8 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import <DiskArbitration/DiskArbitration.h>
 
-typedef void(^BCDiskDidMountBlock)(NSURL *mountURL, NSError *error);
-typedef void(^BCDiskDidUnmountBlock)(NSError *error);
+typedef void(^BDDiskDidMountBlock)(NSURL *mountURL, NSError *error);
+typedef void(^BDDiskDidUnmountBlock)(NSError *error);
+typedef void(^BDDiskDidEjectBlock)(NSError *error);
 
 @interface BDDisk : NSObject
 {
@@ -51,12 +52,19 @@ typedef void(^BCDiskDidUnmountBlock)(NSError *error);
  * Mounts the volume, or all volumes if it's a whole disk
  * Does nothing if an mount is already underway
  */
-- (void)mountWithCompletionHandler:(BCDiskDidMountBlock)handler;
+- (void)mountWithCompletionHandler:(BDDiskDidMountBlock)handler;
 
 /**
  * Unmounts the volume or all volumes associated with the disk if it's a whole disk
  * Does nothing if an unmount is already underway
  */
-- (void)unmountWithCompletionHandler:(BCDiskDidUnmountBlock)handler;
+- (void)unmountWithCompletionHandler:(BDDiskDidUnmountBlock)handler;
+- (void)unmountWithCompletionHandler:(BDDiskDidUnmountBlock)handler force:(BOOL)force;
+
+/**
+ * Ejects volume or disk
+ * Returns NO if volume can't be ejected (like internal disk)
+ */
+- (BOOL)ejectWithCompletionHandler:(BDDiskDidEjectBlock)handler;
 
 @end
