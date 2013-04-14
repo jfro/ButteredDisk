@@ -37,6 +37,7 @@
 		02ED7ED6171B179A00C65987 /* BDDiskArbitrationSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDDiskArbitrationSession.h; sourceTree = SOURCE_ROOT; };
 		02ED7ED7171B179A00C65987 /* BDDiskArbitrationSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDDiskArbitrationSession.m; sourceTree = SOURCE_ROOT; };
 		02ED7EDA171B17F800C65987 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
+		02ED7EFF171B1C8200C65987 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +56,8 @@
 		02ED7EAB171B175600C65987 = {
 			isa = PBXGroup;
 			children = (
+				02ED7EFF171B1C8200C65987 /* README.md */,
+				02ED7F01171B1C9300C65987 /* ButteredDisk */,
 				02ED7EBD171B175600C65987 /* ButteredDiskTester */,
 				02ED7EB6171B175600C65987 /* Frameworks */,
 				02ED7EB5171B175600C65987 /* Products */,
@@ -92,10 +95,6 @@
 		02ED7EBD171B175600C65987 /* ButteredDiskTester */ = {
 			isa = PBXGroup;
 			children = (
-				02ED7ED4171B179A00C65987 /* BDDisk.h */,
-				02ED7ED5171B179A00C65987 /* BDDisk.m */,
-				02ED7ED6171B179A00C65987 /* BDDiskArbitrationSession.h */,
-				02ED7ED7171B179A00C65987 /* BDDiskArbitrationSession.m */,
 				02ED7EC9171B175600C65987 /* BDTAppDelegate.h */,
 				02ED7ECA171B175600C65987 /* BDTAppDelegate.m */,
 				02ED7ECC171B175700C65987 /* MainMenu.xib */,
@@ -114,6 +113,17 @@
 				02ED7EC6171B175600C65987 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		02ED7F01171B1C9300C65987 /* ButteredDisk */ = {
+			isa = PBXGroup;
+			children = (
+				02ED7ED4171B179A00C65987 /* BDDisk.h */,
+				02ED7ED5171B179A00C65987 /* BDDisk.m */,
+				02ED7ED6171B179A00C65987 /* BDDiskArbitrationSession.h */,
+				02ED7ED7171B179A00C65987 /* BDDiskArbitrationSession.m */,
+			);
+			name = ButteredDisk;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
