@@ -24,21 +24,21 @@ typedef void(^BDDiskDidEjectBlock)(NSError *error);
 @property (readonly) BOOL isCurrentSystem;
 @property (readonly) BOOL isRemovable;
 @property (readonly) BOOL isDiskImage;
-@property (readonly) NSString *mediaName;
-@property (readonly) NSString *realDevicePath;
+@property (weak, readonly) NSString *mediaName;
+@property (weak, readonly) NSString *realDevicePath;
 @property (readonly) BOOL isWholeDisk;
 @property (readonly) BOOL isMountable;
 @property (readonly) BOOL isMounted;
 @property (readonly) BOOL isNetwork;
 
-@property (readonly) NSDictionary *diskDescription;
-@property (readonly) NSString *BSDName;
-@property (readonly) NSString *devicePath;
-@property (readonly) NSString *volumeName;
-@property (readonly) NSURL *volumeURL;
-@property (readonly) NSString *volumePath;
-@property (readonly) NSString *filesystem;
-@property (readonly) NSString *volumeUUIDString;
+@property (weak, readonly) NSDictionary *diskDescription;
+@property (weak, readonly) NSString *BSDName;
+@property (weak, readonly) NSString *devicePath;
+@property (weak, readonly) NSString *volumeName;
+@property (weak, readonly) NSURL *volumeURL;
+@property (weak, readonly) NSString *volumePath;
+@property (weak, readonly) NSString *filesystem;
+@property (weak, readonly) NSString *volumeUUIDString;
 @property (readonly) NSInteger mediaSize;
 
 /**
