@@ -7,8 +7,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "BDDiskArbitrationSession.h"
 
-@interface BDTAppDelegate : NSObject <NSApplicationDelegate>
+@interface BDTAppDelegate : NSObject <NSApplicationDelegate, BDDiskArbitrationSessionDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
 

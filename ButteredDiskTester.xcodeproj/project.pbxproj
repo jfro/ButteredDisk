@@ -13,6 +13,9 @@
 		02ED7EC8171B175600C65987 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 02ED7EC6171B175600C65987 /* Credits.rtf */; };
 		02ED7ECB171B175600C65987 /* BDTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 02ED7ECA171B175600C65987 /* BDTAppDelegate.m */; };
 		02ED7ECE171B175700C65987 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02ED7ECC171B175700C65987 /* MainMenu.xib */; };
+		02ED7ED8171B179A00C65987 /* BDDisk.m in Sources */ = {isa = PBXBuildFile; fileRef = 02ED7ED5171B179A00C65987 /* BDDisk.m */; };
+		02ED7ED9171B179A00C65987 /* BDDiskArbitrationSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 02ED7ED7171B179A00C65987 /* BDDiskArbitrationSession.m */; };
+		02ED7EDB171B17F800C65987 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02ED7EDA171B17F800C65987 /* DiskArbitration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,11 @@
 		02ED7EC9171B175600C65987 /* BDTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BDTAppDelegate.h; sourceTree = "<group>"; };
 		02ED7ECA171B175600C65987 /* BDTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BDTAppDelegate.m; sourceTree = "<group>"; };
 		02ED7ECD171B175700C65987 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		02ED7ED4171B179A00C65987 /* BDDisk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDDisk.h; sourceTree = SOURCE_ROOT; };
+		02ED7ED5171B179A00C65987 /* BDDisk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDDisk.m; sourceTree = SOURCE_ROOT; };
+		02ED7ED6171B179A00C65987 /* BDDiskArbitrationSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDDiskArbitrationSession.h; sourceTree = SOURCE_ROOT; };
+		02ED7ED7171B179A00C65987 /* BDDiskArbitrationSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDDiskArbitrationSession.m; sourceTree = SOURCE_ROOT; };
+		02ED7EDA171B17F800C65987 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02ED7EDB171B17F800C65987 /* DiskArbitration.framework in Frameworks */,
 				02ED7EB8171B175600C65987 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,6 +72,7 @@
 		02ED7EB6171B175600C65987 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				02ED7EDA171B17F800C65987 /* DiskArbitration.framework */,
 				02ED7EB7171B175600C65987 /* Cocoa.framework */,
 				02ED7EB9171B175600C65987 /* Other Frameworks */,
 			);
@@ -82,6 +92,10 @@
 		02ED7EBD171B175600C65987 /* ButteredDiskTester */ = {
 			isa = PBXGroup;
 			children = (
+				02ED7ED4171B179A00C65987 /* BDDisk.h */,
+				02ED7ED5171B179A00C65987 /* BDDisk.m */,
+				02ED7ED6171B179A00C65987 /* BDDiskArbitrationSession.h */,
+				02ED7ED7171B179A00C65987 /* BDDiskArbitrationSession.m */,
 				02ED7EC9171B175600C65987 /* BDTAppDelegate.h */,
 				02ED7ECA171B175600C65987 /* BDTAppDelegate.m */,
 				02ED7ECC171B175700C65987 /* MainMenu.xib */,
@@ -169,6 +183,8 @@
 			files = (
 				02ED7EC4171B175600C65987 /* main.m in Sources */,
 				02ED7ECB171B175600C65987 /* BDTAppDelegate.m in Sources */,
+				02ED7ED8171B179A00C65987 /* BDDisk.m in Sources */,
+				02ED7ED9171B179A00C65987 /* BDDiskArbitrationSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,6 +320,7 @@
 				02ED7ED3171B175700C65987 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

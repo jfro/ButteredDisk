@@ -8,11 +8,28 @@
 
 #import "BDTAppDelegate.h"
 
+@interface BDTAppDelegate ()
+{
+	BDDiskArbitrationSession *diskSession;
+}
+
+@end
+
 @implementation BDTAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	// Insert code here to initialize your application
+	diskSession = [[BDDiskArbitrationSession alloc] initWithDelegate:self];
+}
+
+- (void)diskDidAppear:(BDDisk *)disk
+{
+	NSLog(@"Disk appeared: %@", disk);
+}
+
+- (void)diskDidDisappear:(BDDisk *)disk
+{
+	NSLog(@"Disk disappeared: %@", disk);
 }
 
 @end
