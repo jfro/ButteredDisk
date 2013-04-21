@@ -13,4 +13,5 @@ Todo
 =======
 
 * Modernize session class
+* Support filtering abilities of DARegisterDiskAppearedCallback etc.
 * Implement icon lookup on BDDisk

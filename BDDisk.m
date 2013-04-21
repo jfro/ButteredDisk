@@ -168,16 +168,15 @@ void bcDiskDidEject(DADiskRef disk, DADissenterRef dissenter, void *context)
 
 - (NSImage *)icon
 {
-	// TODO: implement proper icon fetching
-//	if([self isMounted] && [self volumeURL])
-//	{
-//		NSData *iconData = [NSFileManager copyIconDataForUrl:[self volumeURL]];
-//		if(iconData)
-//		{
-//			NSImage *image = [[NSImage alloc] initWithData:iconData];
-//			return image;
-//		}
-//	}
+	if([self isMounted] && [self volumeURL])
+	{
+		NSImage *image = [[NSWorkspace sharedWorkspace] iconForFile:[self volumePath]];
+		if(image)
+		{
+			return image;
+		}
+	}
+	
 	return [[NSImage alloc] initByReferencingFile:@"/System/Library/Extensions/IOStorageFamily.kext/Contents/Resources/Internal.icns"];
 }
 
