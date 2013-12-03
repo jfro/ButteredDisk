@@ -85,16 +85,16 @@ void bcDiskDisappeared(DADiskRef disk, void *context)
         [delegate diskDidDisappear:disk];
 }
 
-- (void)diskDidMount:(NSNotification *)note
-{
+//- (void)diskDidMount:(NSNotification *)note
+//{
 //    if([delegate respondsToSelector:@selector(diskDidDisappear:)])
 //        [delegate diskDidAppear:[self diskForVolumeURL:[[note userInfo] objectForKey:NSWorkspaceVolumeURLKey]]];
-}
+//}
 
 // we currently don't care if it unmounts, only if the disk goes away. unmounting a known OS volume, we can still boot via device path
-- (void)diskDidUnmount:(NSNotification *)note
-{
-}
+//- (void)diskDidUnmount:(NSNotification *)note
+//{
+//}
 
 #pragma mark -
 
