@@ -35,6 +35,7 @@ void bcDiskDisappeared(DADiskRef disk, void *context)
 		_session = DASessionCreate(kCFAllocatorDefault);
         _sessionRunLoop = (CFRunLoopRef)CFRetain(CFRunLoopGetCurrent());
 		DASessionScheduleWithRunLoop(_session, _sessionRunLoop, kCFRunLoopCommonModes);
+        _weakSelf = self;
 		[self watchDisks];
 	}
 	return self;
