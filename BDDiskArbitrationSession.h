@@ -8,30 +8,24 @@
 
 #import <Cocoa/Cocoa.h>
 #import <DiskArbitration/DiskArbitration.h>
-#import "BDDisk.h"
 
-@protocol BDDiskArbitrationSessionDelegate
+@class BDDisk;
 
-@optional
-- (void)diskDidAppear:(BDDisk *)disk;
-- (void)diskDidDisappear:(BDDisk *)disk;
-
-@end
-
+@protocol BDDiskArbitrationSessionDelegate;
 
 @interface BDDiskArbitrationSession : NSObject
-{
-	DASessionRef session;
-	NSObject<BDDiskArbitrationSessionDelegate> *__unsafe_unretained delegate;
-}
+@property (weak) id<BDDiskArbitrationSessionDelegate> delegate;
 
-@property (unsafe_unretained) NSObject <BDDiskArbitrationSessionDelegate> *delegate;
-
-- (id)initWithDelegate:(NSObject <BDDiskArbitrationSessionDelegate> *)newDelegate;
+- (id)initWithDelegate:(id<BDDiskArbitrationSessionDelegate>)delegate;
 
 /**
  * Returns a disk object for a given device path
  */
 - (BDDisk *)diskForBSDName:(NSString *)bsdName;
+@end
 
+@protocol BDDiskArbitrationSessionDelegate <NSObject>
+@optional
+- (void)diskDidAppear:(BDDisk *)disk;
+- (void)diskDidDisappear:(BDDisk *)disk;
 @end

@@ -7,38 +7,34 @@
 //
 
 #import "BDDiskArbitrationSession.h"
+#import "BDDisk.h"
 
-@interface BDDiskArbitrationSession(Private)
-- (void)diskDidAppear:(DADiskRef)aDisk;
-- (void)diskDidDisappear:(DADiskRef)aDisk;
-- (void)diskDidMount:(DADiskRef)aDisk;
-- (void)diskDidUnmount:(DADiskRef)aDisk;
-- (void)watchDisks;
-- (void)unwatchDisks;
-@end
-
+@implementation BDDiskArbitrationSession {
+	DASessionRef _session;
+    CFRunLoopRef _sessionRunLoop;
+    __weak BDDiskArbitrationSession *_weakSelf; // used for the callbacks
+}
 
 void bcDiskAppeared(DADiskRef disk, void *context)
 {
-	[(__bridge BDDiskArbitrationSession *)context diskDidAppear:disk];
+    BDDiskArbitrationSession *self = *(BDDiskArbitrationSession * __weak *)context;
+    [self diskDidAppear:disk];
 }
 
 void bcDiskDisappeared(DADiskRef disk, void *context)
 {
-	[(__bridge BDDiskArbitrationSession *)context diskDidDisappear:disk];
+    BDDiskArbitrationSession *self = *(BDDiskArbitrationSession * __weak *)context;
+	[self diskDidDisappear:disk];
 }
-
-@implementation BDDiskArbitrationSession
-
-@synthesize delegate;
 
 - (id)initWithDelegate:(NSObject <BDDiskArbitrationSessionDelegate> *)newDelegate
 {
 	if((self = [super init]))
 	{
-		self.delegate = newDelegate;
-		session = DASessionCreate(kCFAllocatorDefault);
-		DASessionScheduleWithRunLoop(session, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+		_delegate = newDelegate;
+		_session = DASessionCreate(kCFAllocatorDefault);
+        _sessionRunLoop = (CFRunLoopRef)CFRetain(CFRunLoopGetCurrent());
+		DASessionScheduleWithRunLoop(_session, _sessionRunLoop, kCFRunLoopCommonModes);
 		[self watchDisks];
 	}
 	return self;
@@ -47,15 +43,15 @@ void bcDiskDisappeared(DADiskRef disk, void *context)
 - (void)dealloc
 {
 	[self unwatchDisks];
-	
-	CFRelease(session);
-	session = nil;
+	DASessionUnscheduleFromRunLoop(_session, _sessionRunLoop, kCFRunLoopCommonModes);
+	CFRelease(_session);
+    CFRelease(_sessionRunLoop);
 }
 
 - (void)watchDisks
 {
-	DARegisterDiskAppearedCallback(session, NULL, bcDiskAppeared, (__bridge void *)(self));
-	DARegisterDiskDisappearedCallback(session, NULL, bcDiskDisappeared, (__bridge void *)(self));
+	DARegisterDiskAppearedCallback(_session, NULL, bcDiskAppeared, (void *)(&_weakSelf));
+	DARegisterDiskDisappearedCallback(_session, NULL, bcDiskDisappeared, (void *)(&_weakSelf));
     
 	// TODO: add support for mount/unmount notifications (do we have to rely on NSWorkspace?)
 //    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(diskDidMount:) name:NSWorkspaceDidMountNotification object:nil];
@@ -65,8 +61,8 @@ void bcDiskDisappeared(DADiskRef disk, void *context)
 
 - (void)unwatchDisks
 {
-	DAUnregisterCallback(session, bcDiskAppeared, (__bridge void *)(self));
-	DAUnregisterCallback(session, bcDiskDisappeared, (__bridge void *)(self));
+	DAUnregisterCallback(_session, bcDiskAppeared, (void *)(&_weakSelf));
+	DAUnregisterCallback(_session, bcDiskDisappeared, (void *)(&_weakSelf));
     
     [[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 }
@@ -74,19 +70,24 @@ void bcDiskDisappeared(DADiskRef disk, void *context)
 - (void)diskDidAppear:(DADiskRef)aDisk
 {
     BDDisk *disk = [BDDisk diskWithRef:aDisk];
-    if([delegate respondsToSelector:@selector(diskDidAppear:)])
+    id<BDDiskArbitrationSessionDelegate> delegate = self.delegate;
+    if([delegate respondsToSelector:@selector(diskDidAppear:)]) {
         [delegate diskDidAppear:disk];
+    }
 }
 
 - (void)diskDidDisappear:(DADiskRef)aDisk
 {
     BDDisk *disk = [BDDisk diskWithRef:aDisk];
-    if([delegate respondsToSelector:@selector(diskDidDisappear:)])
+    id<BDDiskArbitrationSessionDelegate> delegate = self.delegate;
+    if([delegate respondsToSelector:@selector(diskDidDisappear:)]) {
         [delegate diskDidDisappear:disk];
+    }
 }
 
 //- (void)diskDidMount:(NSNotification *)note
 //{
+//    id<BDDiskArbitrationSessionDelegate> delegate = self.delegate;
 //    if([delegate respondsToSelector:@selector(diskDidDisappear:)])
 //        [delegate diskDidAppear:[self diskForVolumeURL:[[note userInfo] objectForKey:NSWorkspaceVolumeURLKey]]];
 //}
@@ -101,7 +102,7 @@ void bcDiskDisappeared(DADiskRef disk, void *context)
 - (BDDisk *)diskForVolumeURL:(NSURL *)url
 {
     if(url) {
-        DADiskRef diskRef = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (__bridge CFURLRef)url);
+        DADiskRef diskRef = DADiskCreateFromVolumePath(kCFAllocatorDefault, _session, (__bridge CFURLRef)url);
         if(diskRef) {
             BDDisk *disk = [BDDisk diskWithRef:diskRef];
             CFRelease(diskRef);
@@ -113,7 +114,7 @@ void bcDiskDisappeared(DADiskRef disk, void *context)
 
 - (BDDisk *)diskForBSDName:(NSString *)bsdName
 {
-	DADiskRef diskRef = DADiskCreateFromBSDName(kCFAllocatorDefault, session, [bsdName UTF8String]);
+	DADiskRef diskRef = DADiskCreateFromBSDName(kCFAllocatorDefault, _session, [bsdName UTF8String]);
 	if(diskRef) {
         BDDisk *disk = [BDDisk diskWithRef:diskRef];
         CFRelease(diskRef);
