@@ -9,6 +9,8 @@
 #import "BDDisk.h"
 //#import "FMNSFileManagerAdditions.h"
 
+NSString * const BDDiskErrorDomain = @"BDDiskErrorDomain";
+
 @interface BDDisk () {
 	BDDiskDidUnmountBlock _unmountCompletionBlock;
 	BDDiskDidMountBlock _mountCompletionBlock;
@@ -30,7 +32,7 @@ void bcDiskDidMount(DADiskRef disk, DADissenterRef dissenter, void *context)
 		int failureCode = DADissenterGetStatus(dissenter);
 		NSString *failureReason = CFBridgingRelease(DADissenterGetStatusString(dissenter));
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:failureReason forKey:NSLocalizedFailureReasonErrorKey];
-		error = [NSError errorWithDomain:@"BDDiskMmountErrorDomain" code:failureCode userInfo:errorInfo];
+		error = [NSError errorWithDomain:BDDiskErrorDomain code:failureCode userInfo:errorInfo];
 	}
 	
 	[(__bridge BDDisk *)context _mountDidFinishWithError:error];
@@ -44,7 +46,7 @@ void bcDiskDidUnmount(DADiskRef disk, DADissenterRef dissenter, void *context)
 		int failureCode = DADissenterGetStatus(dissenter);
 		NSString *failureReason = CFBridgingRelease(DADissenterGetStatusString(dissenter));
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:failureReason forKey:NSLocalizedFailureReasonErrorKey];
-		error = [NSError errorWithDomain:@"BDDiskUnmountErrorDomain" code:failureCode userInfo:errorInfo];
+		error = [NSError errorWithDomain:BDDiskErrorDomain code:failureCode userInfo:errorInfo];
 	}
 	
 	[(__bridge BDDisk *)context _unmountDidFinishWithError:error];
@@ -58,7 +60,7 @@ void bcDiskDidEject(DADiskRef disk, DADissenterRef dissenter, void *context)
 		int failureCode = DADissenterGetStatus(dissenter);
 		NSString *failureReason = CFBridgingRelease(DADissenterGetStatusString(dissenter));
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObject:failureReason forKey:NSLocalizedFailureReasonErrorKey];
-		error = [NSError errorWithDomain:@"BDDiskEjectErrorDomain" code:failureCode userInfo:errorInfo];
+		error = [NSError errorWithDomain:BDDiskErrorDomain code:failureCode userInfo:errorInfo];
 	}
 	
 	[(__bridge BDDisk *)context _ejectDidFinishWithError:error];

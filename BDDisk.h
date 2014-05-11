@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import <DiskArbitration/DiskArbitration.h>
 
+extern NSString * const BDDiskErrorDomain;
+
 typedef void(^BDDiskDidMountBlock)(NSURL *mountURL, NSError *error);
 typedef void(^BDDiskDidUnmountBlock)(NSError *error);
 typedef void(^BDDiskDidEjectBlock)(NSError *error);
